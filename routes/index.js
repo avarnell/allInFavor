@@ -2,8 +2,6 @@ var express = require('express');
 var router = express.Router();
 var db = require('praise.js')
 
-/* GET home page. */
-
 router.post('/new-poll', function(req ,res){
   db.insert('polls', {
     topic: req.body.topic,
@@ -60,5 +58,11 @@ router.get('/poll/:id', function(req, res){
     res.json(results).status(200).end()
   })
 })
+
+router.get('*', function(req, res, next) {
+  res.sendFile('index.html', {
+    root: __dirname + '/../public'
+  })
+});
 
 module.exports = router;
