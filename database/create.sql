@@ -1,7 +1,9 @@
 CREATE TABLE polls (
   id serial primary key,
   topic text,
-  creator varchar(140)
+  creator varchar(140),
+  access_code varchar(15),
+  anonymous boolean
 );
 
 CREATE TABLE votes (

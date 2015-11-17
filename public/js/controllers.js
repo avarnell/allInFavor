@@ -2,7 +2,7 @@ app.controller('HomeController', ['$scope', function($scope) {
 
 }])
 
-app.controller('CreateController', ['$scope', '$location','$http','$cookies', function($scope, $location, $http, $cookies) {
+app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$rootScope', function($scope, $location, $http, $cookies, $rootScope) {
   $scope.optionLimit = 2;
    $scope.options = [{for: 'option1', label: 'Option 1', id:'option1'},
                     {for: 'option2', label: 'Option 2', id:'option2'},
@@ -10,7 +10,20 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
                     {for: 'option4', label: 'Option 4', id:'option4'},
                     {for: 'option5', label: 'Option 5', id:'option5'}];
   $scope.newVote = function() {
-    //$http.post()
+    $http.post('/new-poll', {
+      topic: $scope.vote.question,
+      creator: $scope.vote.creator,
+      access_code: $scope.vote.code,
+      anonymous: $scope.vote.anonymous,
+      option_1: $scope.vote.option1,
+      option_2: $scope.vote.option2,
+      option_3: $scope.vote.option3,
+      option_4: $scope.vote.option4,
+      option_5: $scope.vote.option5
+    }).then(function(result){
+      console.log(result.data.poll_id)
+      $rootScope.poll_id = result.data.poll_id
+    })
     var id = 1
     // $rootScope.vote = $scope.vote
     // $scope.vote = {}
@@ -20,7 +33,7 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
   }
 }])
 
-app.controller('ModeratorController', ['$scope','$interval', function($scope, $interval){
+app.controller('ModeratorController', ['$scope','$interval', '$http', '$rootScope', function($scope, $interval, $http, $rootScope){
   $scope.labels = []
   $scope.data = []
 
@@ -56,20 +69,20 @@ app.controller('ModeratorController', ['$scope','$interval', function($scope, $i
   
   var checker = ''
 
-  $scope.startVote = function(){
+  $scope.startVote = function(id){
     checker = $interval(function(){
-      $http.get().success(err,data){
-        var results = data
-      }
-
-    }, 3000)
+      console.log('ran once')
+      $http.get('/poll/' + $rootScope.poll_id + '/results').then(function(data){
+        console.log(data)
+      })
+    }, 1000)
     $scope.inProgress = true
   }
 
   $scope.endVote = function(){
-    $http.get().success(err,data){
-      var results = data
-    }
+    $http.get().success(function(err, data){
+      console.log(data)
+    })
     $interval.cancel(checker)
     $scope.inProgress = false
   }
