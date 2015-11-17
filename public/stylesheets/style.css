@@ -44,3 +44,9 @@
 .chart-header {
   color: #999999;
 }
+
+.scroll {
+  height: 300px;
+  overflow: scroll;
+  border-right: 1px solid black;
+}
