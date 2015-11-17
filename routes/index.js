@@ -54,4 +54,11 @@ router.post('/:id/vote', function(req, res){
   })
 })
 
+router.get('/poll/:id', function(req, res){
+  console.log('got it')
+  db.join({polls: req.params.id}, {options: 'poll_id'}, req.params.id).then(function(results){
+    res.json(results).status(200).end()
+  })
+})
+
 module.exports = router;
