@@ -9,7 +9,6 @@ router.post('/new-poll', function(req ,res){
     topic: req.body.topic,
     creator: req.body.creator,
   }).then(function(poll){
-    console.log(poll)
     db.insert('options', {
       poll_id: poll.id, 
       option_1: req.body.option_1,
