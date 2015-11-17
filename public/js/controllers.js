@@ -107,6 +107,13 @@ app.controller('VoteController', ['$scope','$cookies', '$location', function($sc
 
 }])
 
-app.controller('ResultsController', ['$scope', function($scope) {
+app.controller('ResultsController', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
+
+
+
+
   
 }])
+
+
+
