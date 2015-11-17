@@ -8,8 +8,7 @@ CREATE TABLE votes (
   id serial primary key,
   poll_id int references polls(id) on delete cascade,
   name varchar(80),
-  birthday date,
-  vote integer
+  vote varchar(140)
 );
 
 CREATE TABLE options (
