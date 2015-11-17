@@ -2,7 +2,7 @@ app.controller('HomeController', ['$scope', function($scope) {
 
 }])
 
-app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$rootScope', function($scope, $location, $http, $cookies, $rootScope) {
+app.controller('CreateController', ['$scope', '$location','$http','$cookies', function($scope, $location, $http, $cookies) {
   $scope.optionLimit = 2;
    $scope.options = [{for: 'option1', label: 'Option 1', id:'option1'},
                     {for: 'option2', label: 'Option 2', id:'option2'},
@@ -20,7 +20,7 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$
   }
 }])
 
-app.controller('ModeratorController', ['$scope', function($scope){
+app.controller('ModeratorController', ['$scope','$interval', function($scope, $interval){
   $scope.labels = []
   $scope.data = []
 
@@ -53,18 +53,29 @@ app.controller('ModeratorController', ['$scope', function($scope){
   $scope.question = results.topic
   $scope.creator = results.creator
   $scope.userVotes = results.publicVotes
- 
+  
+  var checker = ''
+
   $scope.startVote = function(){
+    checker = $interval(function(){
+      $http.get().success(err,data){
+        var results = data
+      }
+
+    }, 3000)
     $scope.inProgress = true
   }
 
   $scope.endVote = function(){
+    $http.get().success(err,data){
+      var results = data
+    }
+    $interval.cancel(checker)
     $scope.inProgress = false
   }
 
   $scope.inProgress = false
   //dummy data
- 
 }])
 
 app.controller('JoinController', ['$scope', '$location', function($scope, $location) {
