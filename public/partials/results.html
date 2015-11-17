@@ -11,20 +11,20 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-4 col-md-offset-2">
+    <div class="col-md-4 col-md-offset-2 scroll">
       <table class="table">
         <tr>
           <th>Name</th>
           <th>Vote</th>
         </tr>
-        <tr ng-repeat="vote in userVotes">
+        <tr ng-repeat="vote in userVotes track by $index">
           <td>{{vote.personName}}</td>
           <td>{{vote.personVote}}</td>
         </tr>
       </table>
     </div>
     <div class="col-md-6">
-      <div style='width:600px'>
+      <div style='width:100%'>
         <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels">
         </canvas> 
       </div>

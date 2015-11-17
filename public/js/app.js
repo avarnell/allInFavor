@@ -17,13 +17,14 @@ var app = angular.module('allInFavor', ['ngRoute', 'ngCookies', 'chart.js'])
         templateUrl: '/partials/moderator.html',
         controller: 'ModeratorController'
       })
-      .when('/vote/:id', {
-        templateUrl: '/partials/vote.html',
-        controller: 'VoteController'
-      })
       .when('/vote/:id/results', {
         templateUrl: '/partials/results.html',
         controller: 'ResultsController'
       })
+      .when('/vote/:id', {
+        templateUrl: '/partials/vote.html',
+        controller: 'VoteController'
+      })
+      
     $locationProvider.html5Mode(true);
   })

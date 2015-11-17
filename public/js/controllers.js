@@ -84,7 +84,7 @@ app.controller('VoteController', ['$scope','$cookies', '$location', function($sc
   //temp voteId
   var voteId = 1
   if($cookies.get(voteId)){
-    $location.path('/' + voteId + '/results')
+    $location.path('/vote/' + voteId + '/results')
   }
 
   $scope.question = 'Should we have beer at work?';
@@ -100,7 +100,7 @@ app.controller('VoteController', ['$scope','$cookies', '$location', function($sc
     $cookies.put(voteId, 'voted')
     var toSub = 'option_' + ($scope.selectedIndex + 1)
     //http(/).success(function(err,data){
-      $location.path('/' + voteId + '/results')
+      $location.path('/vote/' + voteId + '/results')
    // })
     
   }
@@ -108,11 +108,76 @@ app.controller('VoteController', ['$scope','$cookies', '$location', function($sc
 }])
 
 app.controller('ResultsController', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
+  var results = {
+    isActive : false,
+    id : 1,
+    topic: 'Should we deport Obama',
+    creator : 'Donald Trump',
+    results : [
+      {optionName : 'Yes',
+      optionVotes : 2},
+      {optionName : 'Absolutely',
+      optionVotes : 1}
+    ],
+    publicVotes : [
+      {personName : 'Bobby Tables',
+      personVote: 'Absolutely'},
+      {personName : 'James Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+      {personName : 'Peter Tables', personVote: 'Yes'},
+    ]
+  }
 
+  if(results.isActive == true){
+    var getVotes = $interval(function(){
+      $http.get().success(function(err,data){
+        results = data
+      })
+    }, 1000)
+  }
 
-
-
+  $scope.labels = []
+  $scope.data = []
+  //sample Results
   
+  results.results.forEach(function(result){
+    $scope.labels.push(result.optionName)
+    $scope.data.push(result.optionVotes)
+  })
+  $scope.question = results.topic
+  $scope.creator = results.creator
+  $scope.userVotes = results.publicVotes
+
 }])
 
 
