@@ -40,3 +40,7 @@
 .selected.well {
   background: #00BC8C;
 }
+
+.chart-header {
+  color: #999999;
+}

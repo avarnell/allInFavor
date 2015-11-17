@@ -21,6 +21,39 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$
 }])
 
 app.controller('ModeratorController', ['$scope', function($scope){
+  $scope.labels = []
+  $scope.data = []
+
+  //sample results
+  var results = {
+    id : 1,
+    topic: 'Should we deport Obama',
+    creator : 'Donald Trump',
+    results : [
+      {optionName : 'Yes',
+      optionVotes : 2},
+      {optionName : 'Absolutely',
+      optionVotes : 1}
+    ],
+    publicVotes : [
+      {personName : 'Bobby Tables',
+      personVote: 'Absolutely'},
+      {personName : 'James Tables',
+      personVote: 'Yes'},
+      {personName : 'Peter Tables',
+      personVote: 'Yes'},
+    ]
+  }
+
+  results.results.forEach(function(result){
+    $scope.labels.push(result.optionName)
+    $scope.data.push(result.optionVotes)
+  })
+
+  $scope.question = results.topic
+  $scope.creator = results.creator
+  $scope.userVotes = results.publicVotes
+ 
   $scope.startVote = function(){
     $scope.inProgress = true
   }
@@ -31,8 +64,7 @@ app.controller('ModeratorController', ['$scope', function($scope){
 
   $scope.inProgress = false
   //dummy data
-  $scope.labels = ["james", "peter", "john"];
-  $scope.data = [30, 50, 10]
+ 
 }])
 
 app.controller('JoinController', ['$scope', '$location', function($scope, $location) {

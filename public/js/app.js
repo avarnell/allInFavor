@@ -1,4 +1,4 @@
-var app = angular.module('allInFavor', ['ngRoute', 'ngCookies'])
+var app = angular.module('allInFavor', ['ngRoute', 'ngCookies', 'chart.js'])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
