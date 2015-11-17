@@ -32,3 +32,11 @@
 .checkbox {
   display: inline;
 }
+
+.well {
+  cursor: pointer;
+}
+
+.selected.well {
+  background: #00BC8C;
+}

@@ -1,4 +1,4 @@
-var app = angular.module('allInFavor', ['ngRoute'])
+var app = angular.module('allInFavor', ['ngRoute', 'ngCookies'])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
@@ -12,6 +12,18 @@ var app = angular.module('allInFavor', ['ngRoute'])
       .when('/join', {
         templateUrl: '/partials/join.html',
         controller: 'JoinController'
+      })
+      .when('/moderator/:id', {
+        templateUrl: '/partials/moderator.html',
+        controller: 'ModeratorController'
+      })
+      .when('/vote/:id', {
+        templateUrl: '/partials/vote.html',
+        controller: 'VoteController'
+      })
+      .when('/vote/:id/results', {
+        templateUrl: '/partials/results.html',
+        controller: 'ResultsController'
       })
     $locationProvider.html5Mode(true);
   })

@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      Results
+    </div>
+    <div class="col-md-6">
+      <div style='width:500px'>
+        <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels">
+        </canvas> 
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <button type="button" class="btn btn-success" ng-hide='inProgress' ng-click='startVote()'>Start Vote</button>
+    <button type="button" class="btn btn-danger" ng-show='inProgress' ng-click='endVote()'>End Vote</button>
+  </div>
+</div>
