@@ -28,15 +28,6 @@ router.post('/new-poll', function(req ,res){
   })
 })
 
-router.post('/vote/:poll_id', function(req, res){
-  db.insert('votes', {
-    poll_id: req.params.poll_id, 
-    vote: req.body.vote
-  }).then(function(_){
-    res.render('dashboard', {poll_id: req.body.poll_id})
-  })
-})
-
 router.get('/poll/:id/results', function(req, res){
   Promise.all([
     db.countVotes(req.params.id),
@@ -52,8 +43,6 @@ router.get('/poll/:id/results', function(req, res){
     res.json(currentData).status(200).end()
   })
 })
-
-
 
 router.post('/:id/vote', function(req, res){
   db.insert('votes', {
