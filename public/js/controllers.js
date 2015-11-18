@@ -75,7 +75,7 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
       $http.get('/poll/' + $rootScope.poll_id + '/results').then(function(data){
         console.log(data)
       })
-    }, 1000)
+    }, 3000)
 
     $scope.inProgress = true
   }

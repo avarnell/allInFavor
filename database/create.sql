@@ -4,6 +4,7 @@ CREATE TABLE polls (
   creator varchar(140),
   access_code varchar(15),
   anonymous boolean
+  is_active boolean
 );
 
 CREATE TABLE votes (
