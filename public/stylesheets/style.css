@@ -50,3 +50,11 @@
   height: 300px;
   overflow: scroll;
 }
+
+.required {
+  color: #00BC8C;
+}
+
+.float-right {
+  float: right;
+}
