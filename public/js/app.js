@@ -2,8 +2,7 @@ var app = angular.module('allInFavor', ['ngRoute', 'ngCookies', 'chart.js'])
   .config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: '/partials/home.html',
-        controller: 'HomeController'
+        templateUrl: '/partials/home.html'
       })
       .when('/create', {
         templateUrl: '/partials/create.html',

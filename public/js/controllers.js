@@ -1,8 +1,4 @@
-app.controller('HomeController', ['$scope', function($scope) {
-
-}])
-
-app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$rootScope', function($scope, $location, $http, $cookies, $rootScope) {
+app.controller('CreateController', ['$scope', '$location','$http','$cookies', function($scope, $location, $http, $cookies) {
   $scope.optionLimit = 2;
    $scope.options = [{for: 'option_1', label: 'Option 1', id:'option_1'},
                     {for: 'option_2', label: 'Option 2', id:'option_2'},
@@ -22,92 +18,88 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$
       option_4: $scope.vote.option_4,
       option_5: $scope.vote.option_5
     }).then(function(result){
-      console.log(result.data.poll_id)
-      $rootScope.poll_id = result.data.poll_id
+      $cookies.put('mod', result.data.poll_id)
+      $location.path('/moderator/' + result.data.poll_id);
     })
-    var id = 1
-
-    $cookies.put('mod', id)
-    $location.path('/moderator/' + id);
   }
 }])
 
 
-app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', '$rootScope', function($scope, $interval,$http,$cookies, $routeParams, $location, $rootScope){
-  if($cookies.get('mod') !== $routeParams.id){
-    $location.path('/vote/' + $routeParams.id)
-  }
-
+app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', function($scope, $interval,$http,$cookies, $routeParams, $location){
   $scope.labels = []
   $scope.data = []
 
-  //sample results
-  var results = {
-    id : 1,
-    topic: 'Should we deport Obama',
-    creator : 'Donald Trump',
-    results : [
-      {optionName : 'Yes',
-      optionVotes : 2},
-      {optionName : 'Absolutely',
-      optionVotes : 1}
-    ],
-    publicVotes : [
-      {personName : 'Bobby Tables',
-      personVote: 'Absolutely'},
-      {personName : 'James Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-    ]
+  function checkForVotes(id){
+    $http.get('/poll/' + id + '/results').then(function(result){
+      var results = result.data;
+      $scope.labels = []
+      $scope.data = []
+      results.results.forEach(function(result){
+        $scope.labels.push(result.vote)
+        $scope.data.push(result.count)
+      })
+      $scope.userVotes = results.publicVotes
+      $scope.topic = results.topic
+      $scope.creator = results.creator
+    })
   }
-  results.results.forEach(function(result){
-    $scope.labels.push(result.optionName)
-    $scope.data.push(result.optionVotes)
-  })
-  $scope.question = results.topic
-  $scope.creator = results.creator
-  $scope.userVotes = results.publicVotes
+
+  if($cookies.get('mod') != $routeParams.id){
+    $location.path('/vote/' + $routeParams.id)
+  }
+
+  checkForVotes($routeParams.id);
+
+  
   var checker = ''
 
   $scope.startVote = function(id){
     checker = $interval(function(){
-      console.log('ran once')
-      $http.get('/poll/' + $rootScope.poll_id + '/results').then(function(data){
-        console.log(data)
-      })
-    }, 3000)
-
+      checkForVotes($routeParams.id)
+    }, 1000)
+    //to kill once check in DB
     $scope.inProgress = true
   }
   $scope.endVote = function(){
-    $http.get().success(function(err, data){
-      console.log(data)
-    })
+    checkForVotes($routeParams.id)
     $interval.cancel(checker)
     $scope.inProgress = false
   }
-
-  $scope.inProgress = false
-  //dummy data
 }])
 
-app.controller('JoinController', ['$scope', '$location', function($scope, $location) {
+app.controller('JoinController', ['$scope', '$location','$http', function($scope, $location, $http) {
   $scope.joinVote = function() {
-    var id = 1;
-    $location.path('/vote/' + id);
+    $http.get('/poll/' + $scope.id).success(function(err,result){
+      if(result.is_active == true){
+        console.log("DATA "+ result)
+        $location.path('/vote/' + $scope.id)
+      }else{
+        console.log("DATA "+ result )
+        $location.path('/vote/' + $scope.id)
+      }
+    })
+    
   }
 }])
 
-app.controller('VoteController', ['$scope','$cookies', '$location', function($scope, $cookies, $location) {
-  //temp voteId
-  var voteId = 1
+app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParams', '$http', function($scope, $cookies, $location, $routeParams, $http) {
+  var voteId = $routeParams.id
   if($cookies.get(voteId)){
     $location.path('/vote/' + voteId + '/results')
   }
 
-  $scope.question = 'Should we have beer at work?';
-  $scope.options = [{topic: "Option 1", id: 'option_1'},{topic: "Option 2", id: 'option_2'},{topic: "Option 3", id: 'option_3'}];
+  $http.get('/poll/' + voteId).then(function(results){
+    var options = []
+    console.log(results.data)
+    for(var i = 1; i < 6; i++){
+      var currOpt = 'option_' + i
+      if(results.data[currOpt]){
+        options.push({choice: results.data[currOpt], id: currOpt})
+      }
+    }
+    $scope.question = results.data.topic
+    $scope.options = options
+  })
 
   $scope.selectedIndex;
 
@@ -117,86 +109,54 @@ app.controller('VoteController', ['$scope','$cookies', '$location', function($sc
 
   $scope.submitVote = function(){
     $cookies.put(voteId, 'voted')
+    $scope.choice = '';
     var toSub = 'option_' + ($scope.selectedIndex + 1)
-    //http(/).success(function(err,data){
+    $scope.options.forEach(function(option) {
+      if(option.id == toSub) {
+        $scope.choice = option.choice;
+      }
+    })
+    $http.post('/' + voteId + '/vote', {
+      poll_id: voteId,
+      name: $scope.name,
+      vote: $scope.choice
+    }).then(function(result){
       $location.path('/vote/' + voteId + '/results')
-   // })
-    
+    })
   }
 
 }])
 
-app.controller('ResultsController', ['$scope', '$http', '$interval', function($scope, $http, $interval) {
-  var results = {
-    isActive : false,
-    id : 1,
-    topic: 'Should we deport Obama',
-    creator : 'Donald Trump',
-    results : [
-      {optionName : 'Yes',
-      optionVotes : 2},
-      {optionName : 'Absolutely',
-      optionVotes : 1}
-    ],
-    publicVotes : [
-      {personName : 'Bobby Tables',
-      personVote: 'Absolutely'},
-      {personName : 'James Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables',
-      personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-      {personName : 'Peter Tables', personVote: 'Yes'},
-    ]
-  }
-
-  if(results.isActive == true){
-    var getVotes = $interval(function(){
-      $http.get().success(function(err,data){
-        results = data
-      })
-    }, 1000)
-  }
-
+app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParams', function($scope, $http, $interval, $routeParams) {
   $scope.labels = []
   $scope.data = []
-  //sample Results
-  
-  results.results.forEach(function(result){
-    $scope.labels.push(result.optionName)
-    $scope.data.push(result.optionVotes)
-  })
-  $scope.question = results.topic
-  $scope.creator = results.creator
-  $scope.userVotes = results.publicVotes
+  function checkForVotes(id){
+    $http.get('/poll/' + id + '/results').then(function(result){
+      var results = result.data;
+      $scope.labels = []
+      $scope.data = []
+      results.results.forEach(function(result){
+        $scope.labels.push(result.vote)
+        $scope.data.push(result.count)
+      })
+      $scope.userVotes = results.publicVotes
+      $scope.topic = results.topic
+      $scope.creator = results.creator
+    })
+  }
 
+  var checker = $interval(function(){
+    checkForVotes($routeParams.id)
+  },1000)
+
+  checkForVotes($routeParams.id)
+
+  // if(results.isActive == true){
+  //   var getVotes = $interval(function(){
+  //     checkForVotes($routeParams.id)
+  //   }, 1000)
+  // }
+  
 }])
 
 
