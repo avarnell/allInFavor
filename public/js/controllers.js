@@ -10,16 +10,17 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$
                     {for: 'option_4', label: 'Option 4', id:'option_4'},
                     {for: 'option_5', label: 'Option 5', id:'option_5'}];
   $scope.newVote = function() {
+    console.log($scope.vote)
     $http.post('/new-poll', {
-      topic: $scope.vote.question,
+      topic: $scope.vote.topic,
       creator: $scope.vote.creator,
       access_code: $scope.vote.code,
       anonymous: $scope.vote.anonymous,
-      option_1: $scope.vote.option1,
-      option_2: $scope.vote.option2,
-      option_3: $scope.vote.option3,
-      option_4: $scope.vote.option4,
-      option_5: $scope.vote.option5
+      option_1: $scope.vote.option_1,
+      option_2: $scope.vote.option_2,
+      option_3: $scope.vote.option_3,
+      option_4: $scope.vote.option_4,
+      option_5: $scope.vote.option_5
     }).then(function(result){
       console.log(result.data.poll_id)
       $rootScope.poll_id = result.data.poll_id
