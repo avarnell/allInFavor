@@ -28,6 +28,7 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
 app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', function($scope, $interval,$http,$cookies, $routeParams, $location){
   $scope.labels = []
   $scope.data = []
+  $scope.voteId = $routeParams.id
 
   function checkForVotes(id){
     $http.get('/poll/' + id + '/results').then(function(result){
@@ -139,15 +140,16 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
         $scope.labels.push(result.vote)
         $scope.data.push(result.count)
       })
-      $scope.userVotes = results.publicVotes
+      console.log(result.data)
+      $scope.userVotes = 1 == 2 ? ['VOTE IS ANONYMOUS'] : results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
     })
   }
 
-  var checker = $interval(function(){
-    checkForVotes($routeParams.id)
-  },1000)
+  // var checker = $interval(function(){
+  //   checkForVotes($routeParams.id)
+  // },1000)
 
   checkForVotes($routeParams.id)
 
