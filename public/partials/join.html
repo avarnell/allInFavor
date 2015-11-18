@@ -3,11 +3,11 @@
     <form>
       <div class="form-group">
         <label for="vote-id">Vote ID</label>
-        <input type="text" id="vote-id form" name="vote-id" class="form-input">
+        <input type="text" id="vote-id form" name="vote-id" class="form-input" ng-model="id">
       </div>
       <div class="form-group">
         <label for="code">Code to join (if applicable)</label>
-        <input type="text" id="code form" name="code" class="form-input">
+        <input type="text" id="code form" name="code" class="form-input" ng-model='code'>
       </div>
       <div class="form-group">
         <input type="submit" class="btn btn-default" value="Join Vote" ng-click="joinVote()">

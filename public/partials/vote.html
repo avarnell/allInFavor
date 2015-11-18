@@ -4,11 +4,11 @@
       <label for="name">Name</label>
       <input type="text" id="name form" name="name" class="form-input" ng-model='name'>
     </div>
-    <h2>{{question}}</h2>
+    <h2>{{topic}}</h2>
     <div class="well" ng-repeat="option in options"
            ng-class="{'selected': $index == selectedIndex}"
            ng-click="optionClicked($index)">
-      <p>{{option.topic}}</p>
+      <p>{{option.choice}}</p>
     </div>
     <button type="button" class="btn btn-default" ng-click='submitVote()'>Cast Vote</button>
   </div>
