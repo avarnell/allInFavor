@@ -12,7 +12,7 @@
             <th>Vote</th>
           </tr>
           <tr ng-repeat="vote in userVotes track by $index">
-            <td ng-hide='anonymous'>{{vote.name}}</td>
+            <td>{{vote.name}}</td>
             <td>{{vote.vote}}</td>
           </tr>
         </table>

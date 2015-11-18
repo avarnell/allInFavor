@@ -42,7 +42,6 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
       $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
-      $scope.anonymous = results.anonymous
     })
   }
 
@@ -89,9 +88,6 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
   if($cookies.get(voteId)){
     $location.path('/vote/' + voteId + '/results')
   }
-
-
-
   $http.get('/poll/' + voteId).then(function(results){
     var options = []
     console.log(results.data)
@@ -101,9 +97,11 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
         options.push({choice: results.data[currOpt], id: currOpt})
       }
     }
-    $scope.question = results.data.topic
+
+    $scope.topic = results.data.topic
     $scope.options = options
     $scope.anonymous = results.data.anonymous
+    console.log(results.data.anonymous)
   })
 
   $scope.selectedIndex;
@@ -144,11 +142,10 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
         $scope.labels.push(result.vote)
         $scope.data.push(result.count)
       })
-      console.log(result.data)
+      console.log(results)
       $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
-      $scope.anonymous = results.anonymous
     })
   }
 
