@@ -18,19 +18,26 @@ router.get('/poll/:id/results', function(req, res){
   })
 })
 
+router.get('/poll/:id/:access_code', function(req, res){
+  if (req.params.access_code){
+    db.selectById('polls', req.params.id).then(function(poll){
+      if(!req.params.access_code === poll.access_code){
+        res.status(401).end()
+      }
+    })
+  }
+  db.join({polls: req.params.id}, {options: 'poll_id'}, req.params.id).then(function(results){
+    res.json(results).status(200).end()
+  })
+})
+
 router.post('/:id/vote', function(req, res){
   db.insert('votes', parse.vote(req.params.id, req.body)).then(function(_){
     res.status(200).end()
   })
 })
 
-router.get('/poll/:id', function(req, res){
-  db.join({polls: req.params.id}, {options: 'poll_id'}, req.params.id).then(function(results){
-    res.json(results).status(200).end()
-  })
-})
-
-router.get('*', function(req, res, next) {
+router.get('*', function(req, res) {
   res.sendFile('index.html', {
     root: __dirname + '/../public'
   })
