@@ -2,8 +2,9 @@
   <div class="col-md-6 col-md-offset-3">
     <form name='join'>
       <div class="form-group">
-        <label for="vote-id">Vote ID</label>
-        <input type="number" id="vote-id form" name="vote-id" class="form-input" ng-model="id" required>
+        <label for="voteid">Vote ID</label>
+        <input type="number" id="voteid" name="voteid" class="form-input" ng-model="id" required>
+        <small class='required' ng-show="join.voteid.$pristine">* required</small>
       </div>
       <div class="form-group">
         <label for="code">Code to join (if applicable)</label>

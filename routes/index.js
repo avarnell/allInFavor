@@ -29,6 +29,7 @@ router.get('/poll/:id/:access_code*?', function(req, res){
     })
   }
   db.join({polls: req.params.id}, {options: 'poll_id'}, req.params.id).then(function(results){
+    console.log('hit')
     res.json(results).status(200).end()
   })
 })
