@@ -2,7 +2,7 @@ app.controller('HomeController', ['$scope', function($scope) {
 
 }])
 
-app.controller('CreateController', ['$scope', '$location','$http','$cookies', function($scope, $location, $http, $cookies) {
+app.controller('CreateController', ['$scope', '$location','$http','$cookies', '$rootScope', function($scope, $location, $http, $cookies, $rootScope) {
   $scope.optionLimit = 2;
    $scope.options = [{for: 'option_1', label: 'Option 1', id:'option_1'},
                     {for: 'option_2', label: 'Option 2', id:'option_2'},
@@ -10,7 +10,20 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
                     {for: 'option_4', label: 'Option 4', id:'option_4'},
                     {for: 'option_5', label: 'Option 5', id:'option_5'}];
   $scope.newVote = function() {
-    //$http.post()
+    $http.post('/new-poll', {
+      topic: $scope.vote.question,
+      creator: $scope.vote.creator,
+      access_code: $scope.vote.code,
+      anonymous: $scope.vote.anonymous,
+      option_1: $scope.vote.option1,
+      option_2: $scope.vote.option2,
+      option_3: $scope.vote.option3,
+      option_4: $scope.vote.option4,
+      option_5: $scope.vote.option5
+    }).then(function(result){
+      console.log(result.data.poll_id)
+      $rootScope.poll_id = result.data.poll_id
+    })
     var id = 1
 
     $cookies.put('mod', id)
@@ -18,10 +31,12 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
   }
 }])
 
-app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', function($scope, $interval,$http,$cookies, $routeParams, $location){
+
+app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', '$rootScope', function($scope, $interval,$http,$cookies, $routeParams, $location, $rootScope){
   if($cookies.get('mod') !== $routeParams.id){
     $location.path('/vote/' + $routeParams.id)
   }
+
   $scope.labels = []
   $scope.data = []
 
@@ -53,17 +68,20 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
   $scope.creator = results.creator
   $scope.userVotes = results.publicVotes
   var checker = ''
-  $scope.startVote = function(){
+
+  $scope.startVote = function(id){
     checker = $interval(function(){
-      $http.get().success(function(err,data){
-        results = data
+      console.log('ran once')
+      $http.get('/poll/' + $rootScope.poll_id + '/results').then(function(data){
+        console.log(data)
       })
-    }, 3000)
+    }, 1000)
+
     $scope.inProgress = true
   }
   $scope.endVote = function(){
-    $http.get().success(function(err,data){
-      results = data
+    $http.get().success(function(err, data){
+      console.log(data)
     })
     $interval.cancel(checker)
     $scope.inProgress = false
