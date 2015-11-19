@@ -33,18 +33,26 @@ router.get('/poll/:id/:access_code*?', function(req, res){
 
 router.post('/:id/vote', function(req, res){
   db.insert('votes', parse.vote(req.params.id, req.body)).then(function(_){
+    console.log(_)
     res.status(200).end()
   })
 })
 
-router.post('/poll/start/:id', function(req, res){
+router.put('/poll/start/:id', function(req, res){
   db.update('polls', {id: req.params.id}, {is_active: true})
   res.status(200).end()
 })
 
-router.post('/poll/end/:id', function(req, res){
+router.put('/poll/end/:id', function(req, res){
   db.update('polls', {id: req.params.id}, {is_active: false})
   db.update('polls', {id: req.params.id}, {vote_ended: true})
+  res.status(200).end()
+})
+
+router.get('/reset/:id', function(req, res){
+  db.delete('votes', { poll_id: req.params.id }).then(function(){
+    console.log('deleted')
+  })
   res.status(200).end()
 })
 
