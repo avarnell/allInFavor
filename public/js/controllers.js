@@ -34,9 +34,8 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
 
   function checkForVotes(id){
     $http.get('/poll/' + id + '/results').then(function(result){
-      console.log(result.data)
       var results = result.data;
-      $scope.code;
+      $scope.code = results.access_code;
       $scope.labels = []
       $scope.data = []
       results.results.forEach(function(result){
@@ -46,6 +45,12 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
       $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
+      if(results.is_active == true){
+        $scope.inProgress = true
+      }
+      if(results.vote_ended == true) {
+        $scope.voteEnded = true;
+      }
     })
   }
 
@@ -57,23 +62,27 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
 
   
   var checker = ''
-
-  $scope.startVote = function(id){
+  $scope.inProgress = false;
+  $scope.voteEnded = false;
+  $scope.startVote = function(){
+    $scope.inProgress = true;
     $scope.reset = false;
+    $http.put('/poll/start/'+ $routeParams.id)
     checker = $interval(function(){
       checkForVotes($routeParams.id)
     }, 1000)
-    //to kill once check in DB
-    $scope.inProgress = true
   }
+
   $scope.endVote = function(){
+    $http.put('/poll/end/'+ $routeParams.id)
     $scope.reset = true;
+    $scope.voteEnded = true;
     checkForVotes($routeParams.id)
     $interval.cancel(checker)
     $scope.inProgress = false
   }
-  $scope.resetVote = function() {
-
+  $scope.createVote = function() {
+    $location.path('/create')
   }
 }])
 
@@ -92,10 +101,19 @@ app.controller('JoinController', ['$scope', '$location','$http', '$rootScope',fu
 
 app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParams', '$http','$rootScope', function($scope, $cookies, $location, $routeParams, $http, $rootScope) {
   var voteId = $routeParams.id
+
   if($cookies.get(voteId)){
     $location.path('/vote/' + voteId + '/results')
   }
   $http.get('/poll/' + voteId + '/' + $rootScope.access).success(function(results){
+    if(results.is_active == false){
+      console.log(results.is_active )
+      $rootScope.error = 'The Vote has not yet started'
+      $location.path('/join')
+    }
+    if(results.vote_ended == true){
+      $location.path('/vote/' + voteId + '/results')
+    }
     var options = []
     for(var i = 1; i < 6; i++){
       var currOpt = 'option_' + i
@@ -140,9 +158,9 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
 app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParams', function($scope, $http, $interval, $routeParams) {
   $scope.labels = []
   $scope.data = []
+  var isActive;
   function checkForVotes(id){
     $http.get('/poll/' + id + '/results').then(function(result){
-      console.log(result.data)
       var results = result.data;
       $scope.labels = []
       $scope.data = []
@@ -150,24 +168,21 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
         $scope.labels.push(result.vote)
         $scope.data.push(result.count)
       })
-      console.log(results)
+      isActive = results.is_active
       $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
     })
   }
 
-  // var checker = $interval(function(){
-  //   checkForVotes($routeParams.id)
-  // },1000)
+  var checker = $interval(function(){
+    checkForVotes($routeParams.id)
+    if(isActive == false){
+      $interval.cancel(checker)
+    }
+  },1000)
 
   checkForVotes($routeParams.id)
-
-  // if(results.isActive == true){
-  //   var getVotes = $interval(function(){
-  //     checkForVotes($routeParams.id)
-  //   }, 1000)
-  // }
   
 }])
 

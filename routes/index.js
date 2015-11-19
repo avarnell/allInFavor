@@ -37,12 +37,12 @@ router.post('/:id/vote', function(req, res){
   })
 })
 
-router.post('/poll/start/:id', function(req, res){
+router.put('/poll/start/:id', function(req, res){
   db.update('polls', {id: req.params.id}, {is_active: true})
   res.status(200).end()
 })
 
-router.post('/poll/end/:id', function(req, res){
+router.put('/poll/end/:id', function(req, res){
   db.update('polls', {id: req.params.id}, {is_active: false})
   db.update('polls', {id: req.params.id}, {vote_ended: true})
   res.status(200).end()

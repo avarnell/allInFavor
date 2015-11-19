@@ -3,7 +3,7 @@
     <div class="col-md-9">
       <h1>{{topic}} <small>{{creator}}</small></h1>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3 well">
       <h4 class="codes">Vote ID: {{voteId}}</h4>
       <h4 class="codes">Access Code: {{code}}</h4>
     </div>
@@ -40,9 +40,11 @@
   </div>
   <div class="row">
     <div class="col-md-6 col-md-offset-5">
-      <button type="button" class="btn btn-info" ng-hide='inProgress' ng-click='startVote()'>Start Vote</button>
-      <button type="button" class="btn btn-danger" ng-show='inProgress' ng-click='endVote()'>End Vote</button>
-      <button type="button" class="btn btn-warning" ng-click='resetVote()' ng-disabled='!reset'>Reset Vote</button>
+      <div ng-hide="voteEnded" class="inline">
+        <button type="button" class="btn btn-info" ng-hide='inProgress' ng-click='startVote()'>Start Vote</button>
+        <button type="button" class="btn btn-danger" ng-show='inProgress' ng-click='endVote()'>End Vote</button>
+      </div>
+      <button type="button" class="btn btn-primary" ng-click='createVote()' ng-show='voteEnded'>Create New Vote</button>
     </div>
   </div>
 </div>
