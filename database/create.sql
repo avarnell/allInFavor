@@ -1,15 +1,24 @@
+
+DROP TABLE votes;
+DROP TABLE polls cascade;
+DROP TABLE options;
+
+
 CREATE TABLE polls (
   id serial primary key,
   topic text,
-  creator varchar(140)
+  creator varchar(140),
+  access_code varchar(15),
+  anonymous boolean,
+  is_active boolean default false,
+  vote_ended boolean default false
 );
 
 CREATE TABLE votes (
   id serial primary key,
   poll_id int references polls(id) on delete cascade,
   name varchar(80),
-  birthday date,
-  vote integer
+  vote varchar(140)
 );
 
 CREATE TABLE options (
