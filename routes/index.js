@@ -9,14 +9,14 @@ router.post('/new-poll', function(req ,res){
   db.insert('polls', parse.newPoll(req.body)).then(function(poll){
     var newOptions = parse.newOptions(poll.id, req.body);
     db.insert('options', newOptions)
-    res.json(newOptions).sendStatus(200).end()
+    res.json(newOptions).status(200).end()
   })
 })
 
 router.get('/poll/:id/results', function(req, res){
   getResults(req.params.id).then(function(currentData){
     console.log(currentData)
-    res.json(currentData).sendStatus(200).end()  
+    res.json(currentData).status(200).end()  
   })
 })
 
@@ -28,7 +28,6 @@ router.get('/poll/:id/:access_code*?', function(req, res){
       }
     })
   }
-
   db.join('polls', 'options', req.params.id).then(function(results){
     console.log(results)
     res.json(results).status(200).end()
@@ -37,7 +36,7 @@ router.get('/poll/:id/:access_code*?', function(req, res){
 
 router.post('/:id/vote', function(req, res){
   db.insert('votes', parse.vote(req.params.id, req.body)).then(function(_){
-    res.sendStatus(200).end()
+    res.status(200).end()
   })
 })
 
