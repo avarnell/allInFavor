@@ -6,7 +6,6 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
                     {for: 'option_4', label: 'Option 4', id:'option_4'},
                     {for: 'option_5', label: 'Option 5', id:'option_5'}];
   $scope.newVote = function() {
-    console.log($scope.vote)
     $http.post('/new-poll', {
       topic: $scope.vote.topic,
       creator: $scope.vote.creator,

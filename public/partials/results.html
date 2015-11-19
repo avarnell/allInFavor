@@ -11,7 +11,7 @@
             <th>Name</th>
             <th>Vote</th>
           </tr>
-          <tr ng-repeat="vote in userVotes track by $index">
+          <tr ng-repeat="vote in userVotes.slice().reverse() track by $index">
             <td>{{vote.name}}</td>
             <td>{{vote.vote}}</td>
           </tr>
@@ -21,7 +21,7 @@
     <div class="col-md-6">
       <h3 class="chart-header text-center">Number of Votes: {{userVotes.length}}</h3>
       <div style='width:100%'>
-        <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels">
+        <canvas id="pie" class="chart chart-pie" chart-data="data" chart-labels="labels" chart-legend="true">
         </canvas> 
       </div>
     </div>
