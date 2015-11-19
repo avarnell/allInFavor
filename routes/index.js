@@ -19,13 +19,13 @@ router.get('/poll/:id/results', function(req, res){
 })
 
 router.get('/poll/:id/:access_code*?', function(req, res){
-  if (req.params.access_code){
-    db.selectById('polls', req.params.id).then(function(poll){
+  db.selectById('polls', req.params.id).then(function(poll){
+    if (poll.access_code){
       if (!(req.params.access_code == poll.access_code)){
         res.sendStatus(401).end()
       }
-    })
-  }
+    }
+  })
   db.join('polls', 'options', req.params.id).then(function(results){
     res.json(results).status(200).end()
   })
