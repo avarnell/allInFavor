@@ -1,3 +1,9 @@
+
+DROP TABLE votes;
+DROP TABLE polls cascade;
+DROP TABLE options;
+
+
 CREATE TABLE polls (
   id serial primary key,
   topic text,
