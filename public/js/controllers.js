@@ -33,7 +33,9 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
 
   function checkForVotes(id){
     $http.get('/poll/' + id + '/results').then(function(result){
+      console.log(result.data)
       var results = result.data;
+      $scope.code;
       $scope.labels = []
       $scope.data = []
       results.results.forEach(function(result){
@@ -68,6 +70,9 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
     checkForVotes($routeParams.id)
     $interval.cancel(checker)
     $scope.inProgress = false
+  }
+  $scope.resetVote = function() {
+
   }
 }])
 
