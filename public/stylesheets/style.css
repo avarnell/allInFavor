@@ -7,6 +7,11 @@
   display: block;
 }
 
+.home-buttons {
+  width: 300px;
+  margin: 0 auto;
+}
+
 .button-link {
   text-decoration: none;
   color: white;
@@ -53,6 +58,8 @@
 .scroll {
   height: 300px;
   overflow: scroll;
+  margin: 0 auto;
+  width: 300px;
 }
 
 .required {
@@ -65,4 +72,15 @@
 
 .inline {
   display: inline-block;
+}
+
+.col-centered {
+  display:inline-block;
+  float:none;
+  text-align:left;
+  margin-right:-4px;
+}
+
+.buttons {
+  padding-top: 20px;
 }
