@@ -14,7 +14,7 @@ router.post('/new-poll', function(req ,res){
 
 router.get('/poll/:id/results', function(req, res){
   getResults(req.params.id).then(function(currentData){
-    res.json(currentData).sendStatus(200).end()  
+    res.json(currentData).sendStatus(200).end() 
   })
 })
 
