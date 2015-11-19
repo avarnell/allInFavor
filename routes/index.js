@@ -5,7 +5,6 @@ var parse = require('../lib/body-parser')
 var getResults = require('../lib/results')
 
 router.post('/new-poll', function(req ,res){
-  console.log(parse.newPoll(req.body))
   db.insert('polls', parse.newPoll(req.body)).then(function(poll){
     var newOptions = parse.newOptions(poll.id, req.body);
     db.insert('options', newOptions)
@@ -15,8 +14,7 @@ router.post('/new-poll', function(req ,res){
 
 router.get('/poll/:id/results', function(req, res){
   getResults(req.params.id).then(function(currentData){
-    console.log(currentData)
-    res.json(currentData).status(200).end()  
+    res.json(currentData).sendStatus(200).end()  
   })
 })
 
@@ -29,7 +27,6 @@ router.get('/poll/:id/:access_code*?', function(req, res){
     }
   })
   db.join('polls', 'options', req.params.id).then(function(results){
-    console.log(results)
     res.json(results).status(200).end()
   })
 })
