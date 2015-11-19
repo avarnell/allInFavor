@@ -3,8 +3,9 @@ CREATE TABLE polls (
   topic text,
   creator varchar(140),
   access_code varchar(15),
-  anonymous boolean
-  is_active boolean
+  anonymous boolean,
+  is_active boolean default false,
+  vote_ended boolean default false
 );
 
 CREATE TABLE votes (

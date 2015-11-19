@@ -18,6 +18,7 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
       option_4: $scope.vote.option_4,
       option_5: $scope.vote.option_5
     }).then(function(result){
+      console.log(result, 'got it from sever')
       $cookies.put('mod', result.data.poll_id)
       $location.path('/moderator/' + result.data.poll_id);
     })
