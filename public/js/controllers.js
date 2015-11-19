@@ -70,14 +70,15 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
 
 app.controller('JoinController', ['$scope', '$location','$http', function($scope, $location, $http) {
   $scope.joinVote = function() {
+
+    
     $http.get('/poll/' + $scope.id).success(function(err,result){
-      if(result.is_active == true){
-        console.log("DATA "+ result)
+      console.log(result)
+      
+
+        
         $location.path('/vote/' + $scope.id)
-      }else{
-        console.log("DATA "+ result )
-        $location.path('/vote/' + $scope.id)
-      }
+      
     })
     
   }
@@ -135,6 +136,7 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
   $scope.data = []
   function checkForVotes(id){
     $http.get('/poll/' + id + '/results').then(function(result){
+      console.log(result.data)
       var results = result.data;
       $scope.labels = []
       $scope.data = []
