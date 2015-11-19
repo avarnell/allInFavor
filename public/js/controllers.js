@@ -26,6 +26,7 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
 
 
 app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', function($scope, $interval,$http,$cookies, $routeParams, $location){
+  $scope.reset = true;
   $scope.labels = []
   $scope.data = []
   $scope.voteId = $routeParams.id
@@ -55,6 +56,7 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
   var checker = ''
 
   $scope.startVote = function(id){
+    $scope.reset = false;
     checker = $interval(function(){
       checkForVotes($routeParams.id)
     }, 1000)
@@ -62,47 +64,45 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
     $scope.inProgress = true
   }
   $scope.endVote = function(){
+    $scope.reset = true;
     checkForVotes($routeParams.id)
     $interval.cancel(checker)
     $scope.inProgress = false
   }
 }])
 
-app.controller('JoinController', ['$scope', '$location','$http', function($scope, $location, $http) {
+app.controller('JoinController', ['$scope', '$location','$http', '$rootScope',function($scope, $location, $http, $rootScope) {
+  
   $scope.joinVote = function() {
-
-    
-    $http.get('/poll/' + $scope.id).success(function(err,result){
-      console.log(result)
-      
-
-        
-        $location.path('/vote/' + $scope.id)
-      
-    })
-    
+    $http.get('/poll/' + $scope.id + '/' + $scope.code).success(function(err,result){
+      $rootScope.access = $scope.code
+      $scope.code = ''
+      $location.path('/vote/' + $scope.id)
+    }).error(function(err, status){
+      $scope.error = 'Incorrect access code'
+    })  
   }
 }])
 
-app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParams', '$http', function($scope, $cookies, $location, $routeParams, $http) {
+app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParams', '$http','$rootScope', function($scope, $cookies, $location, $routeParams, $http, $rootScope) {
   var voteId = $routeParams.id
   if($cookies.get(voteId)){
     $location.path('/vote/' + voteId + '/results')
   }
-  $http.get('/poll/' + voteId).then(function(results){
+  $http.get('/poll/' + voteId + '/' + $rootScope.access).success(function(results){
     var options = []
-    console.log(results.data)
     for(var i = 1; i < 6; i++){
       var currOpt = 'option_' + i
-      if(results.data[currOpt]){
-        options.push({choice: results.data[currOpt], id: currOpt})
+      if(results[currOpt]){
+        options.push({choice: results[currOpt], id: currOpt})
       }
     }
 
-    $scope.topic = results.data.topic
+    $scope.topic = results.topic
     $scope.options = options
-    $scope.anonymous = results.data.anonymous
-    console.log(results.data.anonymous)
+    $scope.anonymous = results.anonymous
+  }).error(function(err, status) {
+    $location.path('/join')
   })
 
   $scope.selectedIndex;
