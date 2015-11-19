@@ -18,13 +18,11 @@ app.controller('CreateController', ['$scope', '$location','$http','$cookies', fu
       option_4: $scope.vote.option_4,
       option_5: $scope.vote.option_5
     }).then(function(result){
-      console.log(result, 'got it from sever')
       $cookies.put('mod', result.data.poll_id)
       $location.path('/moderator/' + result.data.poll_id);
     })
   }
 }])
-
 
 app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','$routeParams','$location', function($scope, $interval,$http,$cookies, $routeParams, $location){
   $scope.reset = true;
@@ -59,7 +57,6 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
   }
 
   checkForVotes($routeParams.id);
-
   
   var checker = ''
   $scope.inProgress = false;
@@ -81,13 +78,13 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
     $interval.cancel(checker)
     $scope.inProgress = false
   }
+
   $scope.createVote = function() {
     $location.path('/create')
   }
 }])
 
 app.controller('JoinController', ['$scope', '$location','$http', '$rootScope',function($scope, $location, $http, $rootScope) {
-  
   $scope.joinVote = function() {
     $http.get('/poll/' + $scope.id + '/' + $scope.code).success(function(err,result){
       $rootScope.access = $scope.code
@@ -108,7 +105,7 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
   $http.get('/poll/' + voteId + '/' + $rootScope.access).success(function(results){
     if(results.is_active == false){
       console.log(results.is_active )
-      $rootScope.error = 'The Vote has not yet started'
+      $rootScope.error = 'The vote has not yet started'
       $location.path('/join')
     }
     if(results.vote_ended == true){
@@ -121,7 +118,6 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
         options.push({choice: results[currOpt], id: currOpt})
       }
     }
-
     $scope.topic = results.topic
     $scope.options = options
     $scope.anonymous = results.anonymous
@@ -152,7 +148,6 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
       $location.path('/vote/' + voteId + '/results')
     })
   }
-
 }])
 
 app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParams', function($scope, $http, $interval, $routeParams) {
@@ -185,6 +180,3 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
   checkForVotes($routeParams.id)
   
 }])
-
-
-
