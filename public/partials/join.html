@@ -4,7 +4,7 @@
       <div class="form-group">  
         <label for="voteid">Vote ID</label>
         <input type="number" id="voteid" name="voteid" class="form-input" ng-model="id" required>
-        <small class='required' ng-show="join.voteid.$pristine">* required</small>
+        <small class='required' ng-class="{ 'not-visible' : !join.voteid.$pristine}">* required</small>
       </div>
       <div class="form-group">
         <label for="code">Code to join (if applicable)</label>

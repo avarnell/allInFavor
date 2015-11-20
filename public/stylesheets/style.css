@@ -89,3 +89,18 @@
   border-top-left-radius: 0px;
   border-top-right-radius: 0px;
 }
+
+.not-visible {
+  visibility: hidden;
+}
+
+
+@media (max-width: 480px){
+  .create-form-container {
+    margin-bottom: 100px;
+  }
+
+  .vote-button-container {
+    margin-bottom: 100px;
+  }
+}
