@@ -86,11 +86,17 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
 }])
 
 app.controller('JoinController', ['$scope', '$location','$http', '$rootScope',function($scope, $location, $http, $rootScope) {
+  $scope.$on('$destroy', function(){$rootScope.error = ''});
+
   $scope.joinVote = function() {
-    $http.get('/poll/' + $scope.id + '/' + $scope.code).success(function(err,result){
-      $rootScope.access = $scope.code
-      $scope.code = ''
-      $location.path('/vote/' + $scope.id)
+    $http.get('/poll/' + $scope.id + '/' + $scope.code).success(function(result){
+      if(!result){
+        $scope.error = 'Vote does not exist'
+      }else{
+        $rootScope.access = $scope.code
+        $scope.code = ''
+        $location.path('/vote/' + $scope.id)
+      }
     }).error(function(err, status){
       $scope.error = 'Incorrect access code'
     })  
