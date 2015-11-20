@@ -39,7 +39,7 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
         $scope.labels.push(result.vote)
         $scope.data.push(result.count)
       })
-      $scope.userVotes = results.publicVotes.slice().reverse()
+      $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
       if(results.is_active == true){
@@ -170,7 +170,7 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
         $scope.data.push(result.count)
       })
       isActive = results.is_active
-      $scope.userVotes = results.publicVotes.slice().reverse()
+      $scope.userVotes = results.publicVotes
       $scope.topic = results.topic
       $scope.creator = results.creator
     })

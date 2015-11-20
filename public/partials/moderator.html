@@ -18,7 +18,7 @@
             <th>Name</th>
             <th>Vote</th>
           </tr>
-          <tr ng-repeat="vote in userVotes track by $index">
+          <tr ng-repeat="vote in userVotes.slice().reverse() track by $index">
             <td>{{vote.name}}</td>
             <td>{{vote.vote}}</td>
           </tr>
