@@ -67,6 +67,8 @@ app.controller('ModeratorController', ['$scope','$interval','$http','$cookies','
     checker = $interval(function(){
       checkForVotes($routeParams.id)
     }, 1000)
+    
+    $scope.$on('$destroy', function(){$interval.cancel(checker);});
   }
 
   $scope.endVote = function(){
@@ -103,7 +105,6 @@ app.controller('VoteController', ['$scope','$cookies', '$location', '$routeParam
   }
   $http.get('/poll/' + voteId + '/' + $rootScope.access).success(function(results){
     if(results.is_active == false){
-      console.log(results.is_active )
       $rootScope.error = 'The vote has not yet started'
       $location.path('/join')
     }
@@ -175,6 +176,8 @@ app.controller('ResultsController', ['$scope', '$http', '$interval','$routeParam
       $interval.cancel(checker)
     }
   },1000)
+
+  $scope.$on('$destroy', function(){$interval.cancel(checker);});
 
   checkForVotes($routeParams.id)
   
