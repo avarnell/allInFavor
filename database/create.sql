@@ -1,6 +1,6 @@
 
 DROP TABLE votes;
-DROP TABLE polls cascade;
+DROP TABLE polls;
 DROP TABLE options;
 
 
