@@ -33,6 +33,11 @@ router.get('/poll/:id/:access_code*?', function(req, res){
 })
 
 router.post('/:id/vote', function(req, res){
+  db.selectById(req.params.id).then(function(poll){
+    if (poll.vote_ended){
+     res.status(403).end() 
+    }
+  })
   db.insert('votes', parse.vote(req.params.id, req.body)).then(function(){
     res.status(200).end()
   })
