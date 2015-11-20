@@ -34,7 +34,6 @@ router.get('/poll/:id/:access_code*?', function(req, res){
 
 router.post('/:id/vote', function(req, res){
   db.selectById('polls', req.params.id).then(function(poll){
-    console.log(poll)
     if (poll.vote_ended){
      res.status(403).end() 
     } else {
