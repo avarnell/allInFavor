@@ -98,6 +98,10 @@
   height: 21px;
 }
 
+.btn-block+.btn-block {
+  margin-top: 0px;
+}
+
 @media (max-width: 480px){
   .create-form-container {
     margin-bottom: 100px;

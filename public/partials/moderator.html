@@ -40,11 +40,13 @@
   </div>
   <div class="row vote-button-container">
     <div class="buttons text-center">
-      <div ng-hide="voteEnded" class="inline col-md-4 col-md-offset-4">
-        <button type="button" class="btn btn-info btn-block btn-lg" ng-hide='inProgress' ng-click='startVote()'>Start Vote</button>
-        <button type="button" class="btn btn-danger btn-block btn-lg" ng-show='inProgress' ng-click='endVote()'>End Vote</button>
+      <div class="inline col-md-4 col-md-offset-4">
+        <div ng-hide='voteEnded'>
+          <button type="button" class="btn btn-success btn-block btn-lg" ng-hide='inProgress'  ng-click='startVote()'>Start Vote</button>
+          <button type="button" class="btn btn-danger btn-block btn-lg" ng-show='inProgress' ng-click='endVote()'>End Vote</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-block btn-lg" ng-click='createVote()' ng-show='voteEnded'>Create New Vote</button>
       </div>
-      <button type="button" class="btn btn-primary" ng-click='createVote()' ng-show='voteEnded'>Create New Vote</button>
     </div>
   </div>
 </div>
