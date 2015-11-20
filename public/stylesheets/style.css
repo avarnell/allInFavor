@@ -94,6 +94,9 @@
   visibility: hidden;
 }
 
+.error:empty {
+  height: 21px;
+}
 
 @media (max-width: 480px){
   .create-form-container {

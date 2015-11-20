@@ -11,7 +11,7 @@
         <input type="text" id="code form" name="code" class="form-input" ng-model='code'>
       </div>
       <div class="form-group">
-        <p ng-show='error' class='text-danger'>{{error}}</p>
+        <p ng-class="{'not-visible' : !error }" class='error text-danger'>{{error}}</p>
         <input type="submit" class="btn btn-default" value="Join Vote" ng-click="joinVote()"  ng-disabled="join.$invalid">
       </div>
     </form>
